@@ -1,5 +1,6 @@
 import random
 
+
 # Map list is here to make creating the graph easier
 map_list = {
     'a': ['b', 'd'],
@@ -12,10 +13,11 @@ map_list = {
     'h': ['f', 'g']
 }
 
+
 # This matrix represents the move choice probability of the bug
 # that is crawling the graph
 th = 1 / 3
-matrix_representation = [
+M = [
     [0, .5, 0, .5, 0, 0, 0, 0],
     [th, 0, th, 0, th, 0, 0, 0],
     [0, .5, 0, 0, 0, .5, 0, 0],
@@ -94,7 +96,7 @@ class Graph:
             temp_node.connected_nodes = v   # define what other nodes we are connected too
             self.nodes[temp_node] = 0       # set the initial value of times we visited the vertex to 0
 
-    def get_avg_visits(self, num_iters=1000):
+    def get_avg_visits(self, num_iters=100):
         """
             This function traverses the graph num_iters times and averages out those visits to give us
                 our probability. We then assign that value to each node and create our eigenvector.
@@ -111,13 +113,14 @@ class Graph:
         """
             This function checks if the vector that we created is an eigenvector of the
                 matrix representation of the graph.
+        :return: True if the vectors are equal, False otherwise
         """
         new_vector = []
-        for row in matrix_representation:
+        for x in range(len(M)):
             temp_val = 0
-            for i, val in enumerate(row):
-                temp_val += val * self.vector[i]
-            new_vector.append(temp_val)
+            for i, val in enumerate(self.vector):
+                temp_val += val * M[i][x]
+            new_vector.append(round(temp_val, ndigits=2))
         return new_vector == self.vector
 
 
@@ -133,6 +136,6 @@ if __name__ == '__main__':
     print(graph)
     is_eigenvector = graph.check_vector()
     if is_eigenvector:
-        print(f'The vector - {graph.vector}, \nis an eigenvector of our matrix.')
+        print(f'The vector - {graph.vector}, \nis an Eigenvector of our matrix.')
     else:
-        print(f'The vector - {graph.vector}, \nis not an eigenvector of our matrix.')
+        print(f'The vector - {graph.vector}, \nis not an Eigenvector of our matrix for Eigenvalue 1.')
